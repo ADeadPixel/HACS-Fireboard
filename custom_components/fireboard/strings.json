@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Connect to FireBoard",
+        "title": "Connect to Fireboard",
         "description": "Use your Fireboard credentials.\n\n(If a 40x error is thrown, verify your credentials here: https://fireboard.io/accounts/login/)",
         "data": {
           "username": "Email",
@@ -10,13 +10,15 @@
           "polling_interval": "Polling Interval (Seconds)"
         },
         "data_description": {
+          "username": "The email address associated with your Fireboard account.",
+          "password": "Your Fireboard account password.",
           "polling_interval": "The polling rate determines how long the integration should wait before polling for data again. Fireboard has a cap at 200 polls/hr. The minimum is 20s; 60s is recommended to avoid conflicts."
         }
       }
     },
     "error": {
       "invalid_auth": "Authentication failed. Please check your email and password.",
-      "cannot_connect": "Failed to connect to FireBoard servers."
+      "cannot_connect": "Failed to connect to Fireboard servers."
     },
     "abort": {
       "already_configured": "This account is already configured."
@@ -25,7 +27,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "FireBoard Options",
+        "title": "Fireboard Options",
         "description": "Adjust your polling settings.",
         "data": {
           "polling_interval": "Polling Interval (Seconds)"
@@ -36,4 +38,3 @@
       }
     }
   }
-}
