@@ -53,22 +53,20 @@ class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 class FireBoardOptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry):
-        self.config_entry = config_entry
+        """Initialize options flow."""
+        self.entry = config_entry 
 
     async def async_step_init(self, user_input=None):
+        """Manage the options."""
         if user_input is not None:
-            if user_input[CONF_POLLING_INTERVAL] < MIN_POLLING_INTERVAL:
-                user_input[CONF_POLLING_INTERVAL] = MIN_POLLING_INTERVAL
             return self.async_create_entry(title="", data=user_input)
-
-        current_poll = self.config_entry.options.get(
-            CONF_POLLING_INTERVAL, 
-            self.config_entry.data.get(CONF_POLLING_INTERVAL, DEFAULT_POLLING_INTERVAL)
-        )
 
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema({
-                vol.Optional(CONF_POLLING_INTERVAL, default=current_poll): int
+                vol.Optional(
+                    "enable_alerts", 
+                    default=self.entry.options.get("enable_alerts", False)
+                ): bool,
             })
         )
