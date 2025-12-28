@@ -3,9 +3,9 @@
   "name": "Fireboard",
   "codeowners": ["@ADeadPixel"],
   "config_flow": true,
-  "documentation": "https://github.com/ADeadPixel/ha-fb",
+  "documentation": "https://github.com/ADeadPixel/HACS-Fireboard",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/ADeadPixel/ha-fb/issues",
+  "issue_tracker": "https://github.com/ADeadPixel/HACS-Fireboard/issues",
   "requirements": [],
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
