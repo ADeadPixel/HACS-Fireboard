@@ -1,0 +1,11 @@
+{
+  "domain": "fireboard",
+  "name": "FireBoard",
+  "codeowners": ["@ADeadPixel"],
+  "config_flow": true,
+  "documentation": "https://github.com/ADeadPixel/ha-fb",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/ADeadPixel/ha-fb/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
