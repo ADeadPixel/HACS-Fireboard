@@ -3,7 +3,14 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from .const import DOMAIN, CONF_USERNAME, CONF_PASSWORD, CONF_POLLING_INTERVAL, DEFAULT_POLLING_INTERVAL, MIN_POLLING_INTERVAL
+from .const import (
+    DOMAIN, 
+    CONF_USERNAME, 
+    CONF_PASSWORD, 
+    CONF_POLLING_INTERVAL, 
+    DEFAULT_POLLING_INTERVAL, 
+    MIN_POLLING_INTERVAL
+)
 from .api import FireBoardApiClient
 
 class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -14,9 +21,6 @@ class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         
         if user_input is not None:
-            if user_input[CONF_POLLING_INTERVAL] < MIN_POLLING_INTERVAL:
-                user_input[CONF_POLLING_INTERVAL] = MIN_POLLING_INTERVAL
-
             session = async_get_clientsession(self.hass)
             client = FireBoardApiClient(
                 user_input[CONF_USERNAME], 
@@ -37,7 +41,10 @@ class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         schema = vol.Schema({
             vol.Required(CONF_USERNAME): str,
             vol.Required(CONF_PASSWORD): str,
-            vol.Optional(CONF_POLLING_INTERVAL, default=DEFAULT_POLLING_INTERVAL): int,
+            vol.Optional(
+                CONF_POLLING_INTERVAL, 
+                default=DEFAULT_POLLING_INTERVAL
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_POLLING_INTERVAL)),
         })
 
         return self.async_show_form(
@@ -51,6 +58,7 @@ class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def async_get_options_flow(config_entry):
         return FireBoardOptionsFlowHandler(config_entry)
 
+
 class FireBoardOptionsFlowHandler(config_entries.OptionsFlow):
     def __init__(self, config_entry):
         """Initialize options flow."""
@@ -61,12 +69,19 @@ class FireBoardOptionsFlowHandler(config_entries.OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 
+        current_polling = self.entry.options.get(
+            CONF_POLLING_INTERVAL, 
+            self.entry.data.get(CONF_POLLING_INTERVAL, DEFAULT_POLLING_INTERVAL)
+        )
+
+        options_schema = vol.Schema({
+            vol.Required(
+                CONF_POLLING_INTERVAL, 
+                default=current_polling
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_POLLING_INTERVAL)),
+        })
+
         return self.async_show_form(
             step_id="init",
-            data_schema=vol.Schema({
-                vol.Optional(
-                    "enable_alerts", 
-                    default=self.entry.options.get("enable_alerts", False)
-                ): bool,
-            })
+            data_schema=options_schema
         )
