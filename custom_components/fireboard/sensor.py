@@ -23,7 +23,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     
     sensors = []
     for device_uuid, device_data in coordinator.data.items():
-        device_name = device_data.get("title", "FireBoard")
+        device_name = device_data.get("title", "Fireboard")
         
         sensors.append(FireBoardBatterySensor(coordinator, device_uuid, device_name))
 
@@ -42,7 +42,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities(sensors)
 
 class FireBoardBaseSensor(CoordinatorEntity):
-    """Base class for FireBoard sensors."""
+    """Base class for Fireboard sensors."""
     def __init__(self, coordinator, device_uuid, device_name):
         super().__init__(coordinator)
         self._device_uuid = device_uuid
@@ -53,8 +53,8 @@ class FireBoardBaseSensor(CoordinatorEntity):
         return {
             "identifiers": {(DOMAIN, self._device_uuid)},
             "name": self._device_name,
-            "manufacturer": "FireBoard Labs",
-            "model": self.coordinator.data[self._device_uuid].get("model", "FireBoard"),
+            "manufacturer": "Fireboard Labs",
+            "model": self.coordinator.data[self._device_uuid].get("model", "Fireboard"),
             "sw_version": self.coordinator.data[self._device_uuid].get("version"),
         }
     
@@ -77,7 +77,7 @@ class FireBoardProbeSensor(FireBoardBaseSensor, SensorEntity):
         device = self.coordinator.data.get(self._device_uuid)
         if not device: return UnitOfTemperature.FAHRENHEIT # Default fallback
         
-        # 1 = Celsius, 2 = Fahrenheit (Based on FireBoard API docs/observation)
+        # 1 = Celsius, 2 = Fahrenheit (Based on Fireboard API docs/observation)
         degree_type = device.get("degreetype", 2)
         
         # Check specific channel override if it exists
