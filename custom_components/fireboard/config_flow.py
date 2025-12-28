@@ -14,11 +14,9 @@ class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         
         if user_input is not None:
-            # Validate Polling Interval
             if user_input[CONF_POLLING_INTERVAL] < MIN_POLLING_INTERVAL:
                 user_input[CONF_POLLING_INTERVAL] = MIN_POLLING_INTERVAL
 
-            # Validate Credentials
             session = async_get_clientsession(self.hass)
             client = FireBoardApiClient(
                 user_input[CONF_USERNAME], 
@@ -29,12 +27,10 @@ class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             try:
                 await client.authenticate()
             except Exception:
-                # This matches the error key in strings.json
                 errors["base"] = "invalid_auth"
             else:
-                # Success
                 return self.async_create_entry(
-                    title=user_input[CONF_USERNAME], 
+                    title="FireBoard", 
                     data=user_input
                 )
 
@@ -61,7 +57,6 @@ class FireBoardOptionsFlowHandler(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input=None):
         if user_input is not None:
-            # Enforce minimum limit in options flow too
             if user_input[CONF_POLLING_INTERVAL] < MIN_POLLING_INTERVAL:
                 user_input[CONF_POLLING_INTERVAL] = MIN_POLLING_INTERVAL
             return self.async_create_entry(title="", data=user_input)
