@@ -1,4 +1,4 @@
-"""Config flow for FireBoard integration."""
+"""Config flow for Fireboard integration."""
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
@@ -7,7 +7,7 @@ from .const import DOMAIN, CONF_USERNAME, CONF_PASSWORD, CONF_POLLING_INTERVAL, 
 from .api import FireBoardApiClient
 
 class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for FireBoard."""
+    """Handle a config flow for Fireboard."""
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
@@ -30,7 +30,7 @@ class FireBoardConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "invalid_auth"
             else:
                 return self.async_create_entry(
-                    title="FireBoard", 
+                    title="Fireboard", 
                     data=user_input
                 )
 

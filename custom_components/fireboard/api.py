@@ -1,4 +1,4 @@
-"""Wrapper for FireBoard Cloud API."""
+"""Wrapper for Fireboard Cloud API."""
 import aiohttp
 import logging
 import async_timeout
@@ -36,7 +36,7 @@ class FireBoardApiClient:
                     
                 return resp
         except Exception as e:
-            _LOGGER.error("Socket error connecting to FireBoard: %s", e)
+            _LOGGER.error("Socket error connecting to Fireboard: %s", e)
             raise
 
     async def authenticate(self):
@@ -61,7 +61,7 @@ class FireBoardApiClient:
             return True
             
         except Exception as e:
-            _LOGGER.error("Error authenticating with FireBoard: %s", e)
+            _LOGGER.error("Error authenticating with Fireboard: %s", e)
             raise
 
     async def get_devices(self):
@@ -82,5 +82,5 @@ class FireBoardApiClient:
             return await resp.json()
             
         except Exception as e:
-            _LOGGER.error("Error fetching FireBoard data: %s", e)
+            _LOGGER.error("Error fetching Fireboard data: %s", e)
             raise

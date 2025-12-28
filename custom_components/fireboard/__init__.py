@@ -1,4 +1,4 @@
-"""The FireBoard integration."""
+"""The Fireboard integration."""
 import asyncio
 import logging
 from datetime import timedelta
@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS = ["sensor"]
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up FireBoard from a config entry."""
+    """Set up Fireboard from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
     username = entry.data[CONF_USERNAME]

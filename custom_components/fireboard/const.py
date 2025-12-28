@@ -1,4 +1,4 @@
-"""Constants for the FireBoard integration."""
+"""Constants for the Fireboard integration."""
 from datetime import timedelta
 
 DOMAIN = "fireboard"
@@ -9,4 +9,4 @@ CONF_POLLING_INTERVAL = "polling_interval"
 DEFAULT_POLLING_INTERVAL = 60  # seconds
 MIN_POLLING_INTERVAL = 20      
 # Safety floor to prevent API bans
-# The FireBoard API has a rate limit of 200 requests/hr
+# The Fireboard API has a rate limit of 200 requests/hr
