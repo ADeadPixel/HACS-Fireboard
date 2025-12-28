@@ -1,5 +1,9 @@
 ## Firstly
-Thanks for checking this out! This is my first full HACS/HA integration! I've contributed to a few others but nothing to call my own. If you enjoyed the integration please send me some coffee to fuel more work in the future https://buymeacoffee.com/adeadpixel! Thanks again! 
+Thanks for checking this out! This is my first full HACS/HA integration! I've contributed to a few others but nothing to call my own. If you enjoyed the integration please send me some coffee to fuel more work in the future 
+
+<a href="https://www.buymeacoffee.com/ADeadPixel" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+Thanks again! 
 
 ## FireBoard Home Assistant Integration
 An unofficial integration to connect FireBoard 2 thermometers to Home Assistant via the FireBoard Cloud API.
