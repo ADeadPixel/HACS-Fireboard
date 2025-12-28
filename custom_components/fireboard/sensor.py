@@ -1,4 +1,5 @@
 """Platform for sensor integration."""
+import logging
 from homeassistant.components.sensor import (
     SensorEntity,
     SensorDeviceClass,
@@ -15,6 +16,8 @@ from homeassistant.helpers.entity import EntityCategory
 
 from .const import DOMAIN
 
+_LOGGER = logging.getLogger(__name__)
+
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
     
@@ -28,8 +31,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
         
         sensors.append(FireBoardRSSISensor(coordinator, device_uuid, device_name))
 
-        sensors.append(FireBoardDiagnosticSensor(coordinator, device_uuid, device_name, "ssid", "SSID", None))
-        sensors.append(FireBoardDiagnosticSensor(coordinator, device_uuid, device_name, "internalIP", "IP Address", None))
+        sensors.append(FireBoardDiagnosticSensor(coordinator, device_uuid, device_name, "ssid", "SSID", "mdi:wifi"))
+        sensors.append(FireBoardDiagnosticSensor(coordinator, device_uuid, device_name, "internalIP", "IP Address", "mdi:ip-network"))
 
         for channel in device_data.get("channels", []):
             channel_id = channel.get("channel")
@@ -57,19 +60,36 @@ class FireBoardBaseSensor(CoordinatorEntity):
     
     @property
     def _device_log(self):
-        """Helper to safely access the device_log dict."""
         return self.coordinator.data[self._device_uuid].get("device_log", {})
 
 class FireBoardProbeSensor(FireBoardBaseSensor, SensorEntity):
     def __init__(self, coordinator, device_uuid, device_name, channel_id, label):
         super().__init__(coordinator, device_uuid, device_name)
         self._channel_id = channel_id
-        # Use user-defined label if available, else "Channel X"
-        self._attr_name = f"{device_name} {label if label else f'Channel {channel_id}'}"
         self._attr_unique_id = f"{device_uuid}_channel_{channel_id}"
+        self._attr_name = f"{device_name} {label if label else f'Channel {channel_id}'}"
         self._attr_device_class = SensorDeviceClass.TEMPERATURE
         self._attr_state_class = SensorStateClass.MEASUREMENT
-        self._attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+
+    @property
+    def native_unit_of_measurement(self):
+        """Dynamically determine unit based on API data."""
+        device = self.coordinator.data.get(self._device_uuid)
+        if not device: return UnitOfTemperature.FAHRENHEIT # Default fallback
+        
+        # 1 = Celsius, 2 = Fahrenheit (Based on FireBoard API docs/observation)
+        degree_type = device.get("degreetype", 2)
+        
+        # Check specific channel override if it exists
+        for ch in device.get("channels", []):
+            if ch.get("channel") == self._channel_id:
+                if "degreetype" in ch:
+                    degree_type = ch["degreetype"]
+                break
+                
+        if degree_type == 1:
+            return UnitOfTemperature.CELSIUS
+        return UnitOfTemperature.FAHRENHEIT
 
     @property
     def native_value(self):
@@ -78,7 +98,6 @@ class FireBoardProbeSensor(FireBoardBaseSensor, SensorEntity):
         
         for ch in device.get("channels", []):
             if ch.get("channel") == self._channel_id:
-                # "current_temp" is not present if probe is unplugged
                 return ch.get("current_temp")
         return None
 
@@ -93,10 +112,13 @@ class FireBoardBatterySensor(FireBoardBaseSensor, SensorEntity):
 
     @property
     def native_value(self):
-        # 'vBattPer' is 0.8728 -> 87%
+        # Explicitly cast to float to handle string responses safely
         val = self._device_log.get("vBattPer")
         if val is not None:
-            return int(val * 100)
+            try:
+                return int(float(val) * 100)
+            except (ValueError, TypeError):
+                return None
         return None
 
 class FireBoardVoltageSensor(FireBoardBaseSensor, SensorEntity):
@@ -126,7 +148,6 @@ class FireBoardRSSISensor(FireBoardBaseSensor, SensorEntity):
         return self._device_log.get("signallevel")
 
 class FireBoardDiagnosticSensor(FireBoardBaseSensor, SensorEntity):
-    """Generic sensor for text-based diagnostics (SSID, IP, etc)."""
     def __init__(self, coordinator, device_uuid, device_name, key, label, icon):
         super().__init__(coordinator, device_uuid, device_name)
         self._key = key
