@@ -12,7 +12,7 @@
         "data_description": {
           "username": "The email address associated with your Fireboard account.",
           "password": "Your Fireboard account password.",
-          "polling_interval": "The polling rate determines how long the integration should wait before polling for data again. Fireboard has a cap at 200 polls/hr. The minimum is 20s; 60s is recommended to avoid conflicts."
+          "polling_interval": "The polling rate determines how long the integration should wait before polling for data again. Fireboard has a cap at 200 polls/hr. The minimum is 60s; Read the README for more info."
         }
       }
     },
@@ -33,7 +33,7 @@
           "polling_interval": "Polling Interval (Seconds)"
         },
         "data_description": {
-          "polling_interval": "The polling rate determines how long the integration should wait before polling for data again. Fireboard has a cap at 200 polls/hr. The minimum is 20s; 60s is recommended."
+          "polling_interval": "The polling rate determines how long the integration should wait before polling for data again. Fireboard has a cap at 200 polls/hr. The minimum is 60s; Read the README for more info."
         }
       }
     }

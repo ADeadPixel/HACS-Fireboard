@@ -60,7 +60,15 @@ class FireBoardBaseSensor(CoordinatorEntity):
     
     @property
     def _device_log(self):
-        return self.coordinator.data[self._device_uuid].get("device_log", {})
+        """Return the device log information."""
+        if not self.coordinator.data:
+            return {}
+            
+        device = self.coordinator.data.get(self._device_uuid)
+        if not device:
+            return {}
+
+        return device.get("device_log") or device.get("deviceLog") or {}
 
 class FireBoardProbeSensor(FireBoardBaseSensor, SensorEntity):
     def __init__(self, coordinator, device_uuid, device_name, channel_id, label):
@@ -112,7 +120,6 @@ class FireBoardBatterySensor(FireBoardBaseSensor, SensorEntity):
 
     @property
     def native_value(self):
-        # Explicitly cast to float to handle string responses safely
         val = self._device_log.get("vBattPer")
         if val is not None:
             try:
