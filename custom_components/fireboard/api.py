@@ -2,12 +2,11 @@
 import aiohttp
 import logging
 import async_timeout
+from .const import API_URL, AUTH_URL
 
 _LOGGER = logging.getLogger(__name__)
-API_URL = "https://fireboard.io/api/v1"
-AUTH_URL = "https://fireboard.io/api/rest-auth/login/"
 
-USER_AGENT = "HA-FB/0.1.0"
+USER_AGENT = "HA-FB/1.2.0"
 
 class FireBoardApiClient:
     def __init__(self, username, password, session: aiohttp.ClientSession):
